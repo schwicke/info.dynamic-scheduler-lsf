@@ -1,6 +1,6 @@
 Summary: LSF information provider plugin
 Name: info-dynamic-scheduler-lsf
-Version: 2.3.7
+Version: 2.3.8
 Vendor: CERN
 Release: 1%{?dist}
 License: ASL 2.0
@@ -92,6 +92,9 @@ Additional LSF command line tools
 %doc /usr/share/egi/doc/info.dynamic-scheduler-lsf/btools.txt
 
 %changelog
+* Wed Jul 23 2014 Ulrich Schwickerath <ulrich.schwickerath@cern.ch> 2.3.8-1
+- GGUS #106921
+
 * Thu Apr 17 2014 Ulrich Schwickerath <ulrich.schwickerath@cern.ch> 2.3.7-1
 - add missing Glue2 attributes 
 

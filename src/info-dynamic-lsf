@@ -19,6 +19,13 @@ use File::Basename;
 use Sys::Hostname;
 use EGI::CommandProxyTools;
 use POSIX qw(strftime); 
+use constant {
+  MIN_INT64 => "-9223372036854775807",
+  MAX_INT64 => "9223372036854775807",
+
+  MIN_UINT64 => "0",
+  MAX_UINT64 => "18446744073709551615"
+};
 
 # use autoflush - important for caching
 $|=1;
@@ -715,8 +722,8 @@ sub QueryQueuesInfos {
 	    $queueenabled{$QueueName}     = 0;
 	    $queuestarted{$QueueName}     = 0;
 	    $queueusedtime{$QueueName}    = 0;
-	    $queuemaxwalltime{$QueueName} = 999999999;
-	    $queuemaxcputime{$QueueName}  = 999999999;
+	    $queuemaxwalltime{$QueueName} = MAX_UINT64;
+	    $queuemaxcputime{$QueueName}  = MAX_UINT64;
 	    $queueminwalltime{$QueueName} = 0;
 	    $queuemincputime{$QueueName}  = 0;
             $queuerunningjobs{$QueueName} = 0;
@@ -1119,16 +1126,16 @@ sub QueryQueueJobSlots(){
     # 
     # count the number of CPUs in a queue
     #
-    $nactive = 9999999;
-    $nfree  = 9999999;
+    $nactive = MAX_UINT64;
+    $nfree  = MAX_UINT64;
     foreach my $queue (@AllGridQueues){
 	$TotalCPUs{$queue}     = 0;
 	$FreeCPU{$queue}       = 0;
 	$FreeSlots{$queue}     = 0;
 	$TotalSlots{$queue}    = 0;
 	$TryTotalSlots{$queue} = 0;
-	$MinPhysMem{$queue}    = 99999999;
-	$MinVirtMem{$queue}    = 99999999;
+	$MinPhysMem{$queue}    = MAX_UINT64;
+	$MinVirtMem{$queue}    = MAX_UINT64;
 	$queuequeuedjobs{$queue}  = 0  if (!defined $queuequeuedjobs{$queue});
 	$queuewaitingjobs{$queue} = 0  if (!defined $queuewaitingjobs{$queue});
 	$queuepsuspjobs{$queue}   = 0  if (!defined $queuepsuspjobs{$queue});
@@ -1372,14 +1379,14 @@ sub QueryJobsInfos(){
 	    undef $jobinfo; # next job
 	    # normalize averages
 	    foreach  $queue (@ExportedLSFGridQueues){
-		$queueavpendtime{$queue} = ($nqueueavpendtime{$queue} > 0 ) ?  $queueavpendtime{$queue} / $nqueueavpendtime{$queue} : 99999999;
-		$queueavruntime{$queue}  = ($nqueueavruntime{$queue}  > 0 ) ?  $queueavruntime{$queue} / $nqueueavruntime{$queue}   : 99999999;
-		$queueavwalltime{$queue} = ($nqueueavwalltime{$queue} > 0 ) ?  $queueavwalltime{$queue} / $nqueueavwalltime{$queue} : 99999999;
+		$queueavpendtime{$queue} = ($nqueueavpendtime{$queue} > 0 ) ?  $queueavpendtime{$queue} / $nqueueavpendtime{$queue} : MAX_UINT64 ;
+		$queueavruntime{$queue}  = ($nqueueavruntime{$queue}  > 0 ) ?  $queueavruntime{$queue} / $nqueueavruntime{$queue}   : MAX_UINT64;
+		$queueavwalltime{$queue} = ($nqueueavwalltime{$queue} > 0 ) ?  $queueavwalltime{$queue} / $nqueueavwalltime{$queue} : MAX_UINT64;
 	    }
 	    foreach  $queue (@LsfLocalQueues){
-		$queueavpendtime{$queue} = ($nqueueavpendtime{$queue} > 0 ) ?  $queueavpendtime{$queue} / $nqueueavpendtime{$queue} : 99999999;
-		$queueavruntime{$queue}  = ($nqueueavruntime{$queue}  > 0 ) ?  $queueavruntime{$queue} / $nqueueavruntime{$queue}   : 99999999;
-		$queueavwalltime{$queue} = ($nqueueavwalltime{$queue} > 0 ) ?  $queueavwalltime{$queue} / $nqueueavwalltime{$queue} : 99999999;
+		$queueavpendtime{$queue} = ($nqueueavpendtime{$queue} > 0 ) ?  $queueavpendtime{$queue} / $nqueueavpendtime{$queue} : MAX_UINT64;
+		$queueavruntime{$queue}  = ($nqueueavruntime{$queue}  > 0 ) ?  $queueavruntime{$queue} / $nqueueavruntime{$queue}   : MAX_UINT64;
+		$queueavwalltime{$queue} = ($nqueueavwalltime{$queue} > 0 ) ?  $queueavwalltime{$queue} / $nqueueavwalltime{$queue} : MAX_UINT64;
 	    }
 	}
     }
@@ -1444,7 +1451,7 @@ sub GetDynamicInfoGLUE1 (){
 	    }
 	    $Time=$fac * 60 / $workercount;
 	} else {
-	    $Time=999999;
+	    $Time=MAX_UINT64;
 	}
 	if ($Time < 0){ $Time = 0;}
 	$Time=~s/\..*//;
@@ -1531,7 +1538,7 @@ sub GetDynamicInfoGLUE2 (){
 	    }
 	    $Time=$fac * 60 / $workercount;
 	} else {
-	    $Time=999999;
+	    $Time=MAX_UINT64;
 	}
 	if ($Time < 0){ $Time = 0;}
 	$Time=~s/\..*//;

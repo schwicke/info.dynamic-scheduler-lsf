@@ -26,6 +26,9 @@ ai5: dist
 ai6: dist 
 	@rpmbuild -ts --define 'dist .ai6' ${PACKAGE}-${VERSION}.tar.gz
 
+el6: dist 
+	@rpmbuild -ts --define 'dist .el6' ${PACKAGE}-${VERSION}.tar.gz
+
 clean:
 	rm -f btools.src.tgz ${PACKAGE}-${VERSION}.tar.gz
 

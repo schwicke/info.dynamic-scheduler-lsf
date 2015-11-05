@@ -2,7 +2,7 @@ Summary: LSF information provider plugin
 Name: info-dynamic-scheduler-lsf
 Version: 2.3.8
 Vendor: CERN
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: ASL 2.0
 Group: Applications/System
 Source0: http://cern.ch/uschwick/software/info-dynamic-scheduler-lsf-%{version}.tar.gz
@@ -92,6 +92,12 @@ Additional LSF command line tools
 %doc /usr/share/egi/doc/info.dynamic-scheduler-lsf/btools.txt
 
 %changelog
+* Thu Nov 5 2015  Ulrich Schwickerath <ulrich.schwickerath@cern.ch> 2.3.8-3
+- do not cache the results of lsid
+
+* Fri Jul 10 2015 Ulrich Schwickerath <ulrich.schwickerath@cern.ch> 2.3.8-2
+- drop history from bjobsinfo ...
+
 * Wed Jul 23 2014 Ulrich Schwickerath <ulrich.schwickerath@cern.ch> 2.3.8-1
 - GGUS #106921
 

@@ -384,13 +384,18 @@ sub ReadInputs {
 
 sub QueryLRMSVersion{
     my $command = "$binPath/lsid";
-    foreach (@{RunCommand($command)}){
-        if (m/LSF\s*\D*(\d+.*\d+),/){
-	    chomp;
-	    $BatchSystemVersion=$1;
-	} elsif (m/LSF\s+\D*(\d[\d\.]*)\s+Update\s+(\d)/) {
-	    $BatchSystemVersion=$1.".0.".$2;
-	}
+    if (defined open(COMMAND,"$command 2>&1| ")){
+	while (<COMMAND>){
+	    if (m/LSF\s*\D*(\d+.*\d+),/){
+		chomp;
+		$BatchSystemVersion=$1;
+	    } elsif (m/LSF\s+\D*(\d[\d\.]*)\s+Update\s+(\d)/) {
+		$BatchSystemVersion=$1.".0.".$2;
+	    }
+	};
+	close (COMMAND);
+    } else {
+	die "LSF seems to be down $?";
     }
 }
 
@@ -1217,7 +1222,7 @@ sub QueryJobsInfos(){
     foreach $gqueue (@AllGridQueues){
 	my $command = "$binTools/bjobsinfo";
 	if (-e $command){
-	    my $binforef = RunCommand("$command  -a -q $gqueue");
+	    my $binforef = RunCommand("$command  -q $gqueue");
 	    foreach my $jobinfo (@{$binforef}){
 		chomp $jobinfo;
 		last if ($jobinfo =~ /lsb_openjobinfo/); # no jobs found
